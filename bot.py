@@ -194,14 +194,7 @@ def get_wlagent():
     }
 
     # ดึง underId จาก member_response
-    member_headers = {
-        "accept": "application/json, text/plain, */*",
-        "authorization": token,
-        "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
-    }
+    member_headers = headers.copy()
 
     member_payload = {
         "page": 1,
@@ -242,12 +235,21 @@ def get_wlagent():
         # บันทึกข้อมูล payload ในรูปแบบ JSON ที่อ่านง่าย
         logging.info("Payload: %s", json.dumps(payload, indent=4))
 
-        response = requests.post("https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
+        # เรียก API สำหรับข้อมูล win/lose
+        winlose_response = requests.post("https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
 
-        if response.status_code == 200:
-            return jsonify(response.json())
+        # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
+        footer_response = requests.post("https://ag.ambkingapi.com/a/rep/winloseFooterEs", json=payload, headers=headers)
+
+        if winlose_response.status_code == 200 and footer_response.status_code == 200:
+            winlose_data = winlose_response.json()
+            footer_data = footer_response.json()
+            return jsonify({
+                "winlose": winlose_data,
+                "footer": footer_data
+            })
         else:
-            return jsonify({"message": "Failed to retrieve data", "status_code": response.status_code}), 500
+            return jsonify({"message": "Failed to retrieve data", "status_code": winlose_response.status_code}), 500
     else:
         return jsonify({"message": "Failed to retrieve member list", "status_code": member_response.status_code}), 500
 
