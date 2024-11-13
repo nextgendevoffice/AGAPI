@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 import logging
+import json
 app = Flask(__name__)
 
 # URL ของ API
@@ -10,6 +11,9 @@ DATA_URL = "https://ag.ambkingapi.com/a/rep/winLoseProviderEs"
 PROFILE_URL = "https://ag.ambkingapi.com/a/m/getProfile"
 MEMBER_LIST_URL = "https://ag.ambkingapi.com/a/p/memberList"
 DEPOSIT_URL = "https://ag.ambkingapi.com/a/p/deposit"
+
+# ตั้งค่าการบันทึกข้อมูล
+logging.basicConfig(level=logging.INFO)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -170,6 +174,80 @@ def deposit():
             return jsonify(deposit_response.json())
         else:
             return jsonify({"message": "Failed to deposit", "status_code": deposit_response.status_code}), 500
+    else:
+        return jsonify({"message": "Failed to retrieve member list", "status_code": member_response.status_code}), 500
+
+@app.route('/getwlagent', methods=['POST'])
+def get_wlagent():
+    token = request.json.get('token')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
+    }
+
+    # ดึง underId จาก member_response
+    member_headers = {
+        "accept": "application/json, text/plain, */*",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
+    }
+
+    member_payload = {
+        "page": 1,
+        "limit": 100
+    }
+
+    member_response = requests.post(MEMBER_LIST_URL, json=member_payload, headers=member_headers)
+
+    # บันทึกข้อมูล response ในรูปแบบ JSON ที่อ่านง่าย
+    logging.info("Member response: %s", json.dumps(member_response.json(), indent=4))
+
+    if member_response.status_code == 200:
+        response_data = member_response.json()
+        docs = response_data.get('data', {}).get('docs', [])
+        under_id = None
+
+        if docs:
+            under_id = docs[0].get('parent')
+
+        # บันทึกข้อมูล under_id
+        logging.info(f"UnderId: {under_id}")
+
+        if under_id is None:
+            return jsonify({"message": "UnderId not found"}), 404
+
+        # Payload สำหรับการดึงข้อมูล win/lose
+        payload = {
+            "underId": under_id,
+            "startDate": start_date,
+            "endDate": end_date,
+            "betType": ["normal", "comboStep", "step", "Casino", "Slot", "Lotto", "Keno", "Trade", "Card", "Poker", "m2", "Esport", "Cock", "Sbo", "Saba", "Plb", "Vsb", "Fbs", "Umb", "Afb", "Lali", "Wss"],
+            "cur": "THB",
+            "skip": 0,
+            "limit": 100,
+            "page": 1
+        }
+
+        # บันทึกข้อมูล payload ในรูปแบบ JSON ที่อ่านง่าย
+        logging.info("Payload: %s", json.dumps(payload, indent=4))
+
+        response = requests.post("https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
+
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            return jsonify({"message": "Failed to retrieve data", "status_code": response.status_code}), 500
     else:
         return jsonify({"message": "Failed to retrieve member list", "status_code": member_response.status_code}), 500
 
