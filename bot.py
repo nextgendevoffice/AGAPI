@@ -253,35 +253,5 @@ def get_wlagent():
     else:
         return jsonify({"message": "Failed to retrieve member list", "status_code": member_response.status_code}), 500
 
-@app.route('/check_credit', methods=['POST'])
-def check_credit():
-    try:
-        data = request.json
-        token = data.get('token')
-        
-        if not token:
-            return jsonify({"message": "Token is required"}), 400
-            
-        headers = {
-            "accept": "application/json",
-            "content-type": "application/json",
-            "authorization": f"Bearer {token}"
-        }
-        
-        # เรียก API get profile
-        profile_response = requests.get(PROFILE_URL, headers=headers)
-        
-        if profile_response.status_code == 200:
-            return jsonify(profile_response.json())
-        else:
-            return jsonify({
-                "message": "Failed to get profile", 
-                "status_code": profile_response.status_code
-            }), 500
-            
-    except Exception as e:
-        logging.error(f"Error in check_credit: {str(e)}")
-        return jsonify({"message": f"Internal server error: {str(e)}"}), 500
-
 if __name__ == '__main__':
     app.run(debug=True)
