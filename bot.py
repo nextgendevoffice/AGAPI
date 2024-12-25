@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import requests
 import logging
 import json
 app = Flask(__name__)
+CORS(app)
 
 # URL ของ API
 LOGIN_URL = "https://ag.ambkingapi.com/a/m/authen"
@@ -14,6 +16,10 @@ DEPOSIT_URL = "https://ag.ambkingapi.com/a/p/deposit"
 
 # ตั้งค่าการบันทึกข้อมูล
 logging.basicConfig(level=logging.INFO)
+
+@app.route('/')
+def index():
+    return "Hello, World!"
 
 @app.route('/login', methods=['POST'])
 def login():
