@@ -259,5 +259,54 @@ def get_wlagent():
     else:
         return jsonify({"message": "Failed to retrieve member list", "status_code": member_response.status_code}), 500
 
+@app.route('/creditag', methods=['POST'])
+def get_creditag():
+    token = request.json.get('token')
+    
+    # Headers สำหรับการดึงข้อมูล credit
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+    }
+
+    # Payload สำหรับการดึงข้อมูล
+    payload = {
+        "page": 1,
+        "limit": 100
+    }
+
+    # ส่งคำขอดึงข้อมูล credit
+    response = requests.post("https://ag.googletran.link/a/p/memberList", json=payload, headers=headers)
+
+    # ตรวจสอบผลลัพธ์การดึงข้อมูล
+    if response.status_code == 200:
+        data = response.json()
+        if data.get('code') == 0 and data.get('data') and data['data'].get('docs'):
+            # ดึงข้อมูล credit จาก response
+            credit_info = []
+            for member in data['data']['docs']:
+                thb_balance = member.get('balance', {}).get('THB', {}).get('balance', {}).get('$numberDecimal', '0')
+                credit_info.append({
+                    'username': member.get('username'),
+                    'name': member.get('name'),
+                    'credit': float(thb_balance),
+                    'lastLogin': member.get('lastLogin')
+                })
+            return jsonify({
+                "status": "success",
+                "data": credit_info
+            })
+        else:
+            return jsonify({"message": "No credit data found"}), 404
+    else:
+        return jsonify({
+            "message": "Failed to retrieve credit information", 
+            "status_code": response.status_code
+        }), 500
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
