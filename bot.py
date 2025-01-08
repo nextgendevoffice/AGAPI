@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO)
 
 @app.route('/')
 def index():
-    return "Hello, World!"
+    return "Hello, World2!"
 
 @app.route('/login', methods=['POST'])
 def login():
