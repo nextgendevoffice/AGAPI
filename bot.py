@@ -24,7 +24,8 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     # ดึง client signature
-    response = requests.get(CLIENT_SIGNATURE_URL)
+    baseUrl = request.json.get('baseUrl')
+    response = requests.get(baseUrl + "/a/m/clientSignature" if baseUrl else CLIENT_SIGNATURE_URL)
     client_signature = response.json()['result']['uuid']
 
     # ข้อมูล payload สำหรับการ login
@@ -45,7 +46,7 @@ def login():
     }
 
     # ส่งคำขอ login
-    response = requests.post(LOGIN_URL, json=login_payload, headers=login_headers)
+    response = requests.post(baseUrl + "/a/m/authen" if baseUrl else LOGIN_URL, json=login_payload, headers=login_headers)
 
     # ตรวจสอบผลลัพธ์การ login
     if response.status_code == 200:
@@ -63,7 +64,7 @@ def get_data():
     start_date = request.json.get('startDate')
     end_date = request.json.get('endDate')
     currency = request.json.get('cur')
-
+    baseUrl = request.json.get('baseUrl')
     # Headers สำหรับการดึงข้อมูล
     data_headers = {
         "accept": "application/json, text/plain, */*",
@@ -82,7 +83,7 @@ def get_data():
     }
 
     # ส่งคำขอดึงข้อมูล
-    data_response = requests.post(DATA_URL, json=data_payload, headers=data_headers)
+    data_response = requests.post(baseUrl + "/a/rep/winLoseProviderEs" if baseUrl else DATA_URL, json=data_payload, headers=data_headers)
 
     # ตรวจสอบผลลัพธ์การดึงข้อมูล
     if data_response.status_code == 200:
@@ -93,7 +94,7 @@ def get_data():
 @app.route('/get-profile', methods=['POST'])
 def get_profile():
     token = request.json.get('token')
-
+    
     # Headers สำหรับการดึงข้อมูลโปรไฟล์
     profile_headers = {
         "accept": "application/json, text/plain, */*",
@@ -188,6 +189,7 @@ def get_wlagent():
     token = request.json.get('token')
     start_date = request.json.get('startDate')
     end_date = request.json.get('endDate')
+    baseUrl = request.json.get('baseUrl')
 
     # Headers สำหรับการดึงข้อมูล
     headers = {
@@ -207,7 +209,7 @@ def get_wlagent():
         "limit": 100
     }
 
-    member_response = requests.post(MEMBER_LIST_URL, json=member_payload, headers=member_headers)
+    member_response = requests.post(baseUrl + "/a/p/memberList" if baseUrl else MEMBER_LIST_URL, json=member_payload, headers=member_headers)
 
     # บันทึกข้อมูล response ในรูปแบบ JSON ที่อ่านง่าย
     logging.info("Member response: %s", json.dumps(member_response.json(), indent=4))
@@ -242,10 +244,10 @@ def get_wlagent():
         logging.info("Payload: %s", json.dumps(payload, indent=4))
 
         # เรียก API สำหรับข้อมูล win/lose
-        winlose_response = requests.post("https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
+        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
 
         # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
-        footer_response = requests.post("https://ag.ambkingapi.com/a/rep/winloseFooterEs", json=payload, headers=headers)
+        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseFooterEs", json=payload, headers=headers)
 
         if winlose_response.status_code == 200 and footer_response.status_code == 200:
             winlose_data = winlose_response.json()
