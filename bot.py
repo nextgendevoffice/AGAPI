@@ -310,5 +310,137 @@ def get_creditag():
             "status_code": response.status_code
         }), 500
 
+@app.route('/top10product', methods=['POST'])
+def get_top10product():
+    token = request.json.get('token')
+    agent_id = request.json.get('agentId')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+    prefix = request.json.get('prefix', 'AMBK')
+    currency = request.json.get('currency', '')
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+    }
+
+    # Payload สำหรับการดึงข้อมูล
+    payload = {
+        "agentId": agent_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "prefix": prefix,
+        "currency": currency
+    }
+
+    # ส่งคำขอดึงข้อมูล
+    url = f"{baseUrl}/a/dashboard/top10Product"
+    response = requests.post(url, json=payload, headers=headers)
+
+    # ตรวจสอบผลลัพธ์การดึงข้อมูล
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify(data)
+    else:
+        return jsonify({
+            "message": "Failed to retrieve top 10 products", 
+            "status_code": response.status_code,
+            "url": url
+        }), 500
+
+@app.route('/top10gamelose', methods=['POST'])
+def get_top10gamelose():
+    token = request.json.get('token')
+    agent_id = request.json.get('agentId')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+    prefix = request.json.get('prefix', 'AMBK')
+    currency = request.json.get('currency', '')
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+    }
+
+    # Payload สำหรับการดึงข้อมูล
+    payload = {
+        "agentId": agent_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "prefix": prefix,
+        "currency": currency
+    }
+
+    # ส่งคำขอดึงข้อมูล
+    url = f"{baseUrl}/a/dashboard/top10GameLose"
+    response = requests.post(url, json=payload, headers=headers)
+
+    # ตรวจสอบผลลัพธ์การดึงข้อมูล
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify(data)
+    else:
+        return jsonify({
+            "message": "Failed to retrieve top 10 game lose data", 
+            "status_code": response.status_code,
+            "url": url
+        }), 500
+
+@app.route('/top10gamewin', methods=['POST'])
+def get_top10gamewin():
+    token = request.json.get('token')
+    agent_id = request.json.get('agentId')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+    prefix = request.json.get('prefix', 'AMBK')
+    currency = request.json.get('currency', '')
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+    }
+
+    # Payload สำหรับการดึงข้อมูล
+    payload = {
+        "agentId": agent_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "prefix": prefix,
+        "currency": currency
+    }
+
+    # ส่งคำขอดึงข้อมูล
+    url = f"{baseUrl}/a/dashboard/top10GameWin"
+    response = requests.post(url, json=payload, headers=headers)
+
+    # ตรวจสอบผลลัพธ์การดึงข้อมูล
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify(data)
+    else:
+        return jsonify({
+            "message": "Failed to retrieve top 10 game win data", 
+            "status_code": response.status_code,
+            "url": url
+        }), 500
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
