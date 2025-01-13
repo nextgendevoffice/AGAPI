@@ -94,7 +94,7 @@ def get_data():
 @app.route('/get-profile', methods=['POST'])
 def get_profile():
     token = request.json.get('token')
-    
+    baseUrl = request.json.get('baseUrl')
     # Headers สำหรับการดึงข้อมูลโปรไฟล์
     profile_headers = {
         "accept": "application/json, text/plain, */*",
@@ -105,7 +105,7 @@ def get_profile():
     }
 
     # ส่งคำขอดึงข้อมูลโปรไฟล์
-    profile_response = requests.get(PROFILE_URL, headers=profile_headers)
+    profile_response = requests.get(baseUrl + "/a/m/getProfile" if baseUrl else PROFILE_URL, headers=profile_headers)
 
     # ตรวจสอบผลลัพธ์การดึงข้อมูลโปรไฟล์
     if profile_response.status_code == 200:
