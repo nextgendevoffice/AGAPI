@@ -244,10 +244,10 @@ def get_wlagent():
         logging.info("Payload: %s", json.dumps(payload, indent=4))
 
         # เรียก API สำหรับข้อมูล win/lose
-        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
+        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseEsNew", json=payload, headers=headers)
 
         # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
-        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseFooterEs", json=payload, headers=headers)
+        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseFooterEsNew", json=payload, headers=headers)
 
         if winlose_response.status_code == 200 and footer_response.status_code == 200:
             winlose_data = winlose_response.json()
