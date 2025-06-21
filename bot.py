@@ -40,8 +40,8 @@ def login():
     login_headers = {
         "accept": "application/json, text/plain, */*",
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -70,8 +70,8 @@ def get_data():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -99,8 +99,8 @@ def get_profile():
     profile_headers = {
         "accept": "application/json, text/plain, */*",
         "authorization": token,
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -126,8 +126,8 @@ def deposit():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -158,8 +158,8 @@ def deposit():
             "accept": "application/json, text/plain, */*",
             "authorization": token,
             "content-type": "application/json",
-            "origin": "https://ag.ambcraft.click",
-            "referer": "https://ag.ambcraft.click/",
+            "origin": "https://ag.ambkub.com",
+            "referer": "https://ag.ambkub.com/",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
         }
 
@@ -196,8 +196,8 @@ def get_wlagent():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -244,10 +244,10 @@ def get_wlagent():
         logging.info("Payload: %s", json.dumps(payload, indent=4))
 
         # เรียก API สำหรับข้อมูล win/lose
-        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseEsNew", json=payload, headers=headers)
+        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
 
         # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
-        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseFooterEsNew", json=payload, headers=headers)
+        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseFooterEs", json=payload, headers=headers)
 
         if winlose_response.status_code == 200 and footer_response.status_code == 200:
             winlose_data = winlose_response.json()
@@ -270,8 +270,8 @@ def get_creditag():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
@@ -325,8 +325,8 @@ def get_top10product():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
@@ -369,8 +369,8 @@ def get_top10gamelose():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
@@ -413,8 +413,8 @@ def get_top10gamewin():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambcraft.click",
-        "referer": "https://ag.ambcraft.click/",
+        "origin": "https://ag.ambkub.com",
+        "referer": "https://ag.ambkub.com/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
