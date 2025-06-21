@@ -7,12 +7,12 @@ app = Flask(__name__)
 CORS(app)
 
 # URL ของ API
-LOGIN_URL = "https://ag.ambkingapi.com/a/m/authen"
-CLIENT_SIGNATURE_URL = "https://ag.ambkingapi.com/a/m/clientSignature"
-DATA_URL = "https://ag.ambkingapi.com/a/rep/winLoseProviderEs"
-PROFILE_URL = "https://ag.ambkingapi.com/a/m/getProfile"
-MEMBER_LIST_URL = "https://ag.ambkingapi.com/a/p/memberList"
-DEPOSIT_URL = "https://ag.ambkingapi.com/a/p/deposit"
+LOGIN_URL = "https://ag.googletran.link/a/m/authen"
+CLIENT_SIGNATURE_URL = "https://ag.googletran.link/a/m/clientSignature"
+DATA_URL = "https://ag.googletran.link/a/rep/winLoseProviderEs"
+PROFILE_URL = "https://ag.googletran.link/a/m/getProfile"
+MEMBER_LIST_URL = "https://ag.googletran.link/a/p/memberList"
+DEPOSIT_URL = "https://ag.googletran.link/a/p/deposit"
 
 # ตั้งค่าการบันทึกข้อมูล
 logging.basicConfig(level=logging.INFO)
@@ -244,10 +244,10 @@ def get_wlagent():
         logging.info("Payload: %s", json.dumps(payload, indent=4))
 
         # เรียก API สำหรับข้อมูล win/lose
-        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseEs", json=payload, headers=headers)
+        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "/a/rep/winloseEs", json=payload, headers=headers)
 
         # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
-        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "https://ag.ambkingapi.com/a/rep/winloseFooterEs", json=payload, headers=headers)
+        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "/a/rep/winloseFooterEs", json=payload, headers=headers)
 
         if winlose_response.status_code == 200 and footer_response.status_code == 200:
             winlose_data = winlose_response.json()
