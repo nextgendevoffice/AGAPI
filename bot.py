@@ -40,8 +40,8 @@ def login():
     login_headers = {
         "accept": "application/json, text/plain, */*",
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -70,8 +70,8 @@ def get_data():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -99,8 +99,8 @@ def get_profile():
     profile_headers = {
         "accept": "application/json, text/plain, */*",
         "authorization": token,
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -126,8 +126,8 @@ def deposit():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -158,8 +158,8 @@ def deposit():
             "accept": "application/json, text/plain, */*",
             "authorization": token,
             "content-type": "application/json",
-            "origin": "https://ag.ambkub.com",
-            "referer": "https://ag.ambkub.com/",
+            "origin": "https://ag.ambcraft.click",
+            "referer": "https://ag.ambcraft.click/",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
         }
 
@@ -196,8 +196,8 @@ def get_wlagent():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
     }
 
@@ -270,8 +270,8 @@ def get_creditag():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
@@ -325,8 +325,8 @@ def get_top10product():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
@@ -369,8 +369,8 @@ def get_top10gamelose():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
@@ -413,8 +413,8 @@ def get_top10gamewin():
         "accept": "application/json, text/plain, */*",
         "authorization": token,
         "content-type": "application/json",
-        "origin": "https://ag.ambkub.com",
-        "referer": "https://ag.ambkub.com/",
+        "origin": "https://ag.ambcraft.click",
+        "referer": "https://ag.ambcraft.click/",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
     }
 
