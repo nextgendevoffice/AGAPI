@@ -189,16 +189,24 @@ def get_wlagent():
     token = request.json.get('token')
     start_date = request.json.get('startDate')
     end_date = request.json.get('endDate')
-    baseUrl = request.json.get('baseUrl')
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
 
-    # Headers สำหรับการดึงข้อมูล
+    # Headers สำหรับการดึงข้อมูล (ปรับปรุงตาม curl ล่าสุด)
     headers = {
         "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
         "authorization": token,
         "content-type": "application/json",
         "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
         "referer": "https://ag.ambkub.com/",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
+        "sec-ch-ua": '"Microsoft Edge";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0"
     }
 
     # ดึง underId จาก member_response
@@ -228,12 +236,12 @@ def get_wlagent():
         if under_id is None:
             return jsonify({"message": "UnderId not found"}), 404
 
-        # Payload สำหรับการดึงข้อมูล win/lose
+        # Payload สำหรับการดึงข้อมูล win/lose (เพิ่ม betType ใหม่)
         payload = {
             "underId": under_id,
             "startDate": start_date,
             "endDate": end_date,
-            "betType": ["normal", "comboStep", "step", "Casino", "Slot", "Lotto", "Keno", "Trade", "Card", "Poker", "m2", "Esport", "Cock", "Sbo", "Saba", "Plb", "Vsb", "Fbs", "Umb", "Afb", "Lali", "Wss"],
+            "betType": ["normal", "comboStep", "step", "Casino", "Slot", "Lotto", "Keno", "Trade", "Card", "Poker", "m2", "Esport", "Cock", "Sbo", "Saba", "Plb", "Vsb", "Fbs", "Umb", "Afb", "Lali", "Wss", "Dbs", "M8", "Ufa"],
             "cur": "THB",
             "skip": 0,
             "limit": 100,
@@ -243,11 +251,13 @@ def get_wlagent():
         # บันทึกข้อมูล payload ในรูปแบบ JSON ที่อ่านง่าย
         logging.info("Payload: %s", json.dumps(payload, indent=4))
 
-        # เรียก API สำหรับข้อมูล win/lose
-        winlose_response = requests.post(baseUrl + "/a/rep/winloseEs" if baseUrl else "/a/rep/winloseEs", json=payload, headers=headers)
+        # เรียก API สำหรับข้อมูล win/lose (ใช้ URL ใหม่ที่มี New ต่อท้าย)
+        winlose_url = baseUrl + "/a/rep/winloseEsNew"
+        winlose_response = requests.post(winlose_url, json=payload, headers=headers)
 
-        # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
-        footer_response = requests.post(baseUrl + "/a/rep/winloseFooterEs" if baseUrl else "/a/rep/winloseFooterEs", json=payload, headers=headers)
+        # เรียก API สำหรับข้อมูลสรุปผลลัพธ์ (อาจต้องใช้ URL ใหม่เช่นกัน)
+        footer_url = baseUrl + "/a/rep/winloseFooterEsNew"
+        footer_response = requests.post(footer_url, json=payload, headers=headers)
 
         if winlose_response.status_code == 200 and footer_response.status_code == 200:
             winlose_data = winlose_response.json()
