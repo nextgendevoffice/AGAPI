@@ -452,5 +452,286 @@ def get_top10gamewin():
             "url": url
         }), 500
 
+@app.route('/winlose_member', methods=['POST'])
+def winlose_member():
+    token = request.json.get('token')
+    under_id = request.json.get('underId')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+    bet_type = request.json.get('betType', ["normal", "comboStep", "step", "Casino", "Slot", "Lotto", "Keno", "Trade", "Card", "Poker", "m2", "Esport", "Cock", "Sbo", "Saba", "Plb", "Vsb", "Fbs", "Umb", "Afb", "Lali", "Wss", "Dbs", "M8", "Ufa"])
+    currency = request.json.get('cur', 'THB')
+    skip = request.json.get('skip', 0)
+    limit = request.json.get('limit', 100)
+    page = request.json.get('page', 1)
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
+        "referer": "https://ag.ambkub.com/",
+        "sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+    }
+
+    # Payload สำหรับการดึงข้อมูล win/lose
+    payload = {
+        "underId": under_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "betType": bet_type,
+        "cur": currency,
+        "skip": skip,
+        "limit": limit,
+        "page": page
+    }
+
+    # บันทึกข้อมูล payload
+    logging.info("Winlose member payload: %s", json.dumps(payload, indent=4))
+
+    # เรียก API สำหรับข้อมูล win/lose
+    winlose_url = baseUrl + "/a/rep/winloseEsNew"
+    winlose_response = requests.post(winlose_url, json=payload, headers=headers)
+
+    # เรียก API สำหรับข้อมูลสรุปผลลัพธ์
+    footer_url = baseUrl + "/a/rep/winloseFooterEsNew"
+    footer_response = requests.post(footer_url, json=payload, headers=headers)
+
+    if winlose_response.status_code == 200 and footer_response.status_code == 200:
+        winlose_data = winlose_response.json()
+        footer_data = footer_response.json()
+        return jsonify({
+            "winlose": winlose_data,
+            "footer": footer_data
+        })
+    else:
+        error_message = "Failed to retrieve data"
+        error_details = {
+            "message": error_message,
+            "winlose_status": winlose_response.status_code,
+            "footer_status": footer_response.status_code
+        }
+        
+        # เพิ่มข้อมูล response body ถ้ามี error
+        if winlose_response.status_code != 200:
+            try:
+                error_details["winlose_error"] = winlose_response.json()
+            except:
+                error_details["winlose_error"] = winlose_response.text
+                
+        if footer_response.status_code != 200:
+            try:
+                error_details["footer_error"] = footer_response.json()
+            except:
+                error_details["footer_error"] = footer_response.text
+                
+        return jsonify(error_details), 500
+
+@app.route('/winlose_member_detail', methods=['POST'])
+def winlose_member_detail():
+    token = request.json.get('token')
+    under_id = request.json.get('underId')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+    bet_type = request.json.get('betType', ["normal", "comboStep", "step", "Casino", "Slot", "Lotto", "Keno", "Trade", "Card", "Poker", "m2", "Esport", "Cock", "Sbo", "Saba", "Plb", "Vsb", "Fbs", "Umb", "Afb", "Lali", "Wss", "Dbs", "M8", "Ufa"])
+    currency = request.json.get('cur', ['THB'])  # เป็น array
+    skip = request.json.get('skip', 0)
+    limit = request.json.get('limit', 100)
+    page = request.json.get('page', 1)
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
+        "referer": "https://ag.ambkub.com/",
+        "sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+    }
+
+    # ตรวจสอบว่า currency เป็น string หรือ array
+    if isinstance(currency, str):
+        currency = [currency]
+
+    # Payload สำหรับการดึงข้อมูล win/lose detail
+    payload = {
+        "underId": under_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "betType": bet_type,
+        "cur": currency,  # ส่งเป็น array
+        "skip": skip,
+        "limit": limit,
+        "page": page
+    }
+
+    # บันทึกข้อมูล payload
+    logging.info("Winlose member detail payload: %s", json.dumps(payload, indent=4))
+
+    # เรียก API สำหรับข้อมูล win/lose detail
+    detail_url = baseUrl + "/a/rep/winLoseDetail"
+    detail_response = requests.post(detail_url, json=payload, headers=headers)
+
+    if detail_response.status_code == 200:
+        detail_data = detail_response.json()
+        return jsonify(detail_data)
+    else:
+        error_message = "Failed to retrieve win/lose detail"
+        error_details = {
+            "message": error_message,
+            "status_code": detail_response.status_code
+        }
+        
+        # เพิ่มข้อมูล response body ถ้ามี error
+        try:
+            error_details["error"] = detail_response.json()
+        except:
+            error_details["error"] = detail_response.text
+                
+        return jsonify(error_details), 500
+
+@app.route('/winlose_find_by_precalid', methods=['POST'])
+def winlose_find_by_precalid():
+    token = request.json.get('token')
+    precal_id = request.json.get('id')
+    limit = request.json.get('limit', 100)
+    page = request.json.get('page', 1)
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
+        "referer": "https://ag.ambkub.com/",
+        "sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+    }
+
+    # Payload สำหรับการค้นหาด้วย preCalId
+    payload = {
+        "id": precal_id,
+        "limit": limit,
+        "page": page
+    }
+
+    # บันทึกข้อมูล payload
+    logging.info("WinLose find by preCalId payload: %s", json.dumps(payload, indent=4))
+
+    # เรียก API สำหรับค้นหาข้อมูล win/lose ด้วย preCalId
+    find_url = baseUrl + "/a/rep/winLoseFindByPreCalId"
+    find_response = requests.post(find_url, json=payload, headers=headers)
+
+    if find_response.status_code == 200:
+        find_data = find_response.json()
+        return jsonify(find_data)
+    else:
+        error_message = "Failed to find win/lose by preCalId"
+        error_details = {
+            "message": error_message,
+            "status_code": find_response.status_code,
+            "precal_id": precal_id
+        }
+        
+        # เพิ่มข้อมูล response body ถ้ามี error
+        try:
+            error_details["error"] = find_response.json()
+        except:
+            error_details["error"] = find_response.text
+                
+        return jsonify(error_details), 500
+
+@app.route('/bet_detail_member', methods=['POST'])
+def bet_detail_member():
+    token = request.json.get('token')
+    game_id = request.json.get('gameId')
+    ref1 = request.json.get('ref1')
+    ref2 = request.json.get('ref2')
+    ref3 = request.json.get('ref3')
+    bet_time = request.json.get('betTime')
+    username = request.json.get('username')
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
+        "referer": "https://ag.ambkub.com/",
+        "sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+    }
+
+    # Payload สำหรับการดึงรายละเอียดการเดิมพัน
+    payload = {
+        "gameId": game_id,
+        "ref1": ref1,
+        "ref2": ref2,
+        "ref3": ref3,
+        "betTime": bet_time,
+        "username": username
+    }
+
+    # บันทึกข้อมูล payload
+    logging.info("Bet detail member payload: %s", json.dumps(payload, indent=4))
+
+    # เรียก API สำหรับดูรายละเอียดการเดิมพัน
+    detail_url = baseUrl + "/a/rep/gameDetail"
+    detail_response = requests.post(detail_url, json=payload, headers=headers)
+
+    if detail_response.status_code == 200:
+        detail_data = detail_response.json()
+        return jsonify(detail_data)
+    else:
+        error_message = "Failed to retrieve bet detail"
+        error_details = {
+            "message": error_message,
+            "status_code": detail_response.status_code,
+            "game_id": game_id,
+            "username": username
+        }
+        
+        # เพิ่มข้อมูล response body ถ้ามี error
+        try:
+            error_details["error"] = detail_response.json()
+        except:
+            error_details["error"] = detail_response.text
+                
+        return jsonify(error_details), 500
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
