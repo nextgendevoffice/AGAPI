@@ -667,6 +667,126 @@ def winlose_find_by_precalid():
                 
         return jsonify(error_details), 500
 
+@app.route('/getMemberReportWithdeposit', methods=['POST'])
+def get_member_report_with_deposit():
+    token = request.json.get('token')
+    username = request.json.get('username')
+    start_date = request.json.get('startDate')
+    end_date = request.json.get('endDate')
+    page = request.json.get('page', 1)
+    limit = request.json.get('limit', 10)
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
+        "referer": "https://ag.ambkub.com/",
+        "sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+    }
+
+    # Payload สำหรับการดึงรายงานสมาชิกพร้อมข้อมูลการฝากเงิน
+    payload = {
+        "username": username,
+        "startDate": start_date,
+        "endDate": end_date,
+        "page": page,
+        "limit": limit
+    }
+
+    # บันทึกข้อมูล payload
+    logging.info("Member report with deposit payload: %s", json.dumps(payload, indent=4))
+
+    # เรียก API สำหรับดึงรายงานสมาชิก
+    report_url = baseUrl + "/a/p/getMemberReportWithDatePaginate"
+    report_response = requests.post(report_url, json=payload, headers=headers)
+
+    if report_response.status_code == 200:
+        report_data = report_response.json()
+        return jsonify(report_data)
+    else:
+        error_message = "Failed to retrieve member report with deposit"
+        error_details = {
+            "message": error_message,
+            "status_code": report_response.status_code,
+            "username": username
+        }
+        
+        # เพิ่มข้อมูล response body ถ้ามี error
+        try:
+            error_details["error"] = report_response.json()
+        except:
+            error_details["error"] = report_response.text
+                
+        return jsonify(error_details), 500
+
+@app.route('/getBetHistorywithdeposit', methods=['POST'])
+def get_bet_history_with_deposit():
+    token = request.json.get('token')
+    bet_id = request.json.get('id')
+    nk = request.json.get('nk', '')
+    baseUrl = request.json.get('baseUrl', 'https://ag.googletran.link')
+
+    # Headers สำหรับการดึงข้อมูล
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": token,
+        "content-type": "application/json",
+        "origin": "https://ag.ambkub.com",
+        "priority": "u=1, i",
+        "referer": "https://ag.ambkub.com/",
+        "sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+    }
+
+    # Payload สำหรับการดึงประวัติการเดิมพัน
+    payload = {
+        "id": bet_id,
+        "nk": nk
+    }
+
+    # บันทึกข้อมูล payload
+    logging.info("Bet history payload: %s", json.dumps(payload, indent=4))
+
+    # เรียก API สำหรับดึงประวัติการเดิมพัน
+    history_url = baseUrl + "/a/p/getBetHistory"
+    history_response = requests.post(history_url, json=payload, headers=headers)
+
+    if history_response.status_code == 200:
+        history_data = history_response.json()
+        return jsonify(history_data)
+    else:
+        error_message = "Failed to retrieve bet history"
+        error_details = {
+            "message": error_message,
+            "status_code": history_response.status_code,
+            "bet_id": bet_id
+        }
+        
+        # เพิ่มข้อมูล response body ถ้ามี error
+        try:
+            error_details["error"] = history_response.json()
+        except:
+            error_details["error"] = history_response.text
+                
+        return jsonify(error_details), 500
+
 @app.route('/bet_detail_member', methods=['POST'])
 def bet_detail_member():
     token = request.json.get('token')
